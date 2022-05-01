@@ -60,7 +60,7 @@ class GameBoy {
     if (keyPressed) {
       if (key == 'w' || key == 'W' || keyCode == UP) return 3; 
       if (key == 'a' || key == 'A' || keyCode == LEFT) return 4; 
-      if (key == 'd' || key == 'D' || keyCode == 39) return 5; 
+      if (key == 'd' || key == 'D' || keyCode == RIGHT) return 5; 
       if (key == 's' || key == 'S' || keyCode == DOWN) return 6;
       if (key == ' ') return 1;
     }
