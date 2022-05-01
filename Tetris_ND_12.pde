@@ -13,25 +13,47 @@ void setup(){
 }
 
 void draw() {
-  gb.drawDisplay();
-  
-  if (y < 15){
-    drawBlock(gb.block[rot], x, y);
-    y++;
+  if (gb.checkBlockCollision(gb.block[rot], x, y + 1)) {
+    gb.memBlock(gb.block[rot], x, y);
+    createBlock((int)random(0, 7));
   } else {
-    createBlock( (int) random(7) );
+    y++;
   }
-  
-  delay(speed);
+  gb.drawDisplay();
+  drawBlock(gb.block[rot], x, y);
+  delay(speed / acc);
 }
 
 void keyPressed(){
   if (gb.getKey() == 4){
-   x--; 
+    if(!gb.checkBlockCollision(gb.block[rot], x - 1, y)){
+      x--; 
+    }
+   
   }
   if (gb.getKey() == 5){
-   x++; 
+   if(!gb.checkBlockCollision(gb.block[rot], x + 1, y)){
+      x++; 
+    }
   }
+  
+  if(gb.getKey() == 3){
+    
+    int tempRot = rot;
+    
+    if(tempRot < 3){
+     tempRot++; 
+    }else {
+      tempRot = 0;
+    }
+    
+    if(!gb.checkBlockCollision(gb.block[tempRot], x + 1, y)){
+      rot = tempRot;
+    }
+     
+      
+  }
+  
 }
 
 void drawBlock(byte[][] arr,int x ,int y){
