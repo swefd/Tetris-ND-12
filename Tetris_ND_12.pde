@@ -2,9 +2,17 @@ GameBoy gb = new GameBoy();
 
 int x = 2;
 int y = -1;
+
+int nX = 0;
+int nY = 0;
+
 int rot = 0;
 int speed = 200;
 int acc = 1; // Expl
+
+int level = 0;
+int score = 0;
+boolean gameOver = true;
 
 void setup(){
   size(285,565);
@@ -13,18 +21,75 @@ void setup(){
 }
 
 void draw() {
-  if (gb.checkBlockCollision(gb.block[rot], x, y + 1)) {
-    gb.memBlock(gb.block[rot], x, y);
-    createBlock((int)random(0, 7));
+  if (gameOver){    
+     gb.drawPoint(nX, nY);
+     
+     if(nX < 8){ 
+       nX++;
+     } else {
+       nX = 0;
+       if(nY <= 15){
+         nY++;
+       } else{
+         gameOver = false;
+         nY = 0;
+         nX = 0;
+       }
+     }
+     delay(1);
+    
   } else {
-    y++;
+  
+    if (gb.checkBlockCollision(gb.block[rot], x, y + 1)) {
+      gb.memBlock(gb.block[rot], x, y);
+      
+      // 
+      if (y <=1){
+        gameOver = true;
+        gb.display = new boolean[8][16];
+        println("----Game Over----");
+        println("- Score: " + score + " -");
+        score = 0;
+        level = 0;
+      }
+      
+      int lines = gb.fullLine();
+      
+      if (lines != 0) {
+        score += lines;
+        level +=lines;
+      }
+      
+      if (level >= 5) {
+        acc += 1;
+        level=0;
+      } else {
+        acc=1;
+      }
+  
+  
+      
+      createBlock((int)random(0, 7));
+    } else {
+      y++;
+    }
+    gb.drawDisplay();
+    drawBlock(gb.block[rot], x, y);
+    delay(speed / acc);
+  
   }
-  gb.drawDisplay();
-  drawBlock(gb.block[rot], x, y);
-  delay(speed / acc);
+  
+  
 }
 
 void keyPressed(){
+  
+  if (gb.getKey() == 6){
+    if(!gb.checkBlockCollision(gb.block[rot], x, y + 1)){
+      y++;
+    }
+  }
+  
   if (gb.getKey() == 4){
     if(!gb.checkBlockCollision(gb.block[rot], x - 1, y)){
       x--; 
